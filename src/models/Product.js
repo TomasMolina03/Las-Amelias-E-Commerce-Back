@@ -7,7 +7,9 @@ const productSchema = new Schema({
     image: { type: String, required: true },
     price: { type: Number, required: true },
     finalPrice: { type: Number, required: false },
-    date: {type: Date, default: Date.now}
+    size: { type: String, required: true },
+    design: { type: String, required: true },
+    date: { type: Date, default: Date.now }
 })
 
 const Product = model('Product', productSchema);

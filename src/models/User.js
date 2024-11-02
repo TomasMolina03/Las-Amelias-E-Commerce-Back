@@ -6,9 +6,14 @@ const userSchema = new Schema({
     name: { type: String, required: true },
     surname: { type: String, required: true },
     mobileNumber: { type: String, required: true },
-    role: {type: String, enum: ['user', 'admin'], default: 'user'},
+    role: { type: String, enum: ['user', 'admin'], default: 'user' },
     address: {type: String, required: true },
-    date: {type: Date, default: Date.now}
+    orders: [{ 
+        type: Schema.Types.ObjectId, 
+        ref: 'Order',
+        default: []
+    }],
+    date: { type: Date, default: Date.now }
 })
 
 const User = model('User', userSchema);
