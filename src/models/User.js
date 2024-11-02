@@ -7,7 +7,9 @@ const userSchema = new Schema({
     surname: { type: String, required: true },
     mobileNumber: { type: String, required: true },
     role: {type: String, enum: ['user', 'admin'], default: 'user'},
-    address: {type: String, required: false }
+    address: {type: String, required: true },
+    date: {type: Date, default: Date.now}
 })
 
-model('User', userSchema)
+const User = model('User', userSchema);
+module.exports = User;
