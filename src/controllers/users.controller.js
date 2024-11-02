@@ -1,13 +1,47 @@
 const usersController = {};
 
-usersController.getUsers = (req, res) => res.json({message: "GET Users"})
+const User = require('../models/User');
 
-usersController.getUser = (req, res) => res.json({message: "GET User"})
+usersController.getUsers = async (req, res) => {
+    const users = await User.find();
+    res.json(users);
+}
 
-usersController.createUsers = (req, res) => res.json({message: "User saved"})
+usersController.getUser = async (req, res) => {
+    const users = await User.findById(req.params.id);
+    res.json(users);
+}
 
-usersController.updateUsers = (req, res) => res.json({message: "User updated"})
+usersController.createUsers = async (req, res) => {
+    const { email, password, name, surname, mobileNumber, address } = req.body;
+    const newUser = new User({
+        email,
+        password,
+        name,
+        surname,
+        mobileNumber,
+        address
+    })
+    await newUser.save();
+    res.json({message: 'User saved'});
+}
 
-usersController.deleteUsers = (req, res) => res.json({message: "User deleted"})
+usersController.updateUsers = async (req, res) => {
+    const { email, password, name, surname, mobileNumber, address } = req.body;
+    await User.findByIdAndUpdate(req.params.id, {
+        email,
+        password,
+        name,
+        surname,
+        mobileNumber,
+        address
+    })
+    res.json({message: 'User updated'});
+}
 
-module.exports = usersController
+usersController.deleteUsers = async (req, res) => {
+    await User.findByIdAndDelete(req.params.id);
+    res.json({message: 'User deleted'});
+}
+
+module.exports = usersController;
