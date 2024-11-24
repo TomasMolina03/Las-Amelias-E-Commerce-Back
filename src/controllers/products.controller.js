@@ -13,32 +13,38 @@ productsController.getProduct = async (req, res) => {
 }
 
 productsController.createProducts = async (req, res) => {
-    const { name, stock, colour, image, price, finalPrice, size, design } = req.body;
+    const { name, description, price, image, category, subCategory, sizes, date, bestSeller, stock, colour } = req.body;
     const newProduct = new Product({
         name,
-        stock,
-        colour,
-        image,
+        description,
         price,
-        finalPrice,
-        size,
-        design
+        image,
+        category,
+        subCategory,
+        sizes,
+        date,
+        bestSeller,
+        stock,
+        colour
     })
     await newProduct.save();
     res.json({message: 'Product saved'});
 }
 
 productsController.updateProducts = async (req, res) => {
-    const { name, stock, colour, image, price, finalPrice, size, design } = req.body;
+    const { name, description, price, image, category, subCategory, sizes, date, bestSeller, stock, colour } = req.body;
     await Product.findByIdAndUpdate(req.params.id, {
         name,
-        stock,
-        colour,
-        image,
+        description,
         price,
-        finalPrice,
-        size,
-        design
+        image,
+        category,
+        subCategory,
+        sizes,
+        date,
+        bestSeller,
+        stock,
+        colour
     })
     res.json({message: 'Product updated'});
 }
