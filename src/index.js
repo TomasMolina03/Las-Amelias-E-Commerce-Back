@@ -8,7 +8,7 @@ async function main(){
         console.log("Server on port", app.get('port'));
     }
     catch (error) {
-        console.log("Error starting the server:", error.message);
+        console.log("Error starting the server: ", error.message);
         process.exit(1);
     }
 }
