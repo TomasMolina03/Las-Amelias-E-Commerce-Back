@@ -16,25 +16,25 @@ router.route('/')
 router.route('/:id')
     .get(
         [
-            param(id).isMongoId().withMessage('Invalid ID format.')
+            param('id').isMongoId().withMessage('Invalid ID format.')
         ],
         getUser)
 
     .put(
         [
-            param(id).isMongoId().withMessage('Invalid ID format.'),
+            param('id').isMongoId().withMessage('Invalid ID format.'),
             body('name').optional().isString(),
             body('surname').optional().isString(),
             body('address').optional().isString(),
             body('mobileNumber').optional().isString(),
-            body('email').optional.isEmail().withMessage('Invalid email format'),
-
+            body('email').optional().isEmail().withMessage('Invalid email format'),
+            body('password').optional().isLength({ min: 6 }).withMessage('Password must be at least 6 characters long.')
         ],
         updateUsers)
 
     .delete(
         [
-            param(id).isMongoId().withMessage('Invalid ID format.')
+            param('id').isMongoId().withMessage('Invalid ID format.')
         ],
         deleteUsers)
 

@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const usersController = {};
 
 const User = require('../models/User');
@@ -27,9 +28,10 @@ usersController.createUsers = async (req, res) => {
         const existingUser = await User.findOne({ email });
         if (existingUser) return res.json({message: 'Email already exists.'});
 
+        const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({
         email,
-        password,
+        password: hashedPassword,
         name,
         surname,
         mobileNumber,
@@ -45,18 +47,16 @@ usersController.createUsers = async (req, res) => {
 usersController.updateUsers = async (req, res) => {
     try {
         const { email, password, name, surname, mobileNumber, address } = req.body;
+        let updatedFields = { email, name, surname, mobileNumber, address };
+        if(password) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            updatedFields.password = hashedPassword;
+        }
         const updatedUser = await User.findByIdAndUpdate(
-            req.params.id, {
-                email,
-                password,
-                name,
-                surname,
-                mobileNumber,
-                address
-            },
-            {new: true});
-            if(!updatedUser) return res.status(404).json({message: 'User not found.'});
-            res.status(200).json({message: 'User updated ', user: updatedUser});
+            req.params.id, updatedFields, {new: true}
+        );
+        if(!updatedUser) return res.status(404).json({message: 'User not found.'});
+        res.status(200).json({message: 'User updated ', user: updatedUser});
     } catch (error) {
         res.status(500).json({message: 'Error updating user', error: error.message});
     }
