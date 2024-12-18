@@ -10,7 +10,7 @@ router.route('/:id')
 .put(updateOrder)
 .delete(deleteOrder)
 router.route('/user/:userId')
-  .get(getOrdersByUserId); // Llamada al controlador para obtener órdenes por usuario
+  .get(getOrdersByUserId);
 
 
 
