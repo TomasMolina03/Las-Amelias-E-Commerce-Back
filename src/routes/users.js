@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getUsers, getUser, createUsers, updateUsers, deleteUsers } = require('../controllers/users.controller');
+const { getUsers, getUser, createUsers, updateUsers, deleteUsers, loginUser } = require('../controllers/users.controller');
 const { body, param } = require('express-validator');
 
 const router = Router();
@@ -38,5 +38,13 @@ router.route('/:id')
         ],
         deleteUsers)
 
+router.post(
+    '/login',
+    [
+        body('email').isEmail().withMessage('Invalid email format.'),
+        body('password').notEmpty().withMessage('Password is required.')
+    ],
+    loginUser
+)
 
 module.exports = router;
