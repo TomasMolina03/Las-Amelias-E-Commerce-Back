@@ -1,10 +1,10 @@
 const { Router } = require('express');
-const { getOrders, getOrder, createOrder, updateOrder, deleteOrder, getOrdersByUserId } = require('../controllers/orders.controller');
+const { getOrders, getOrder, updateOrder, deleteOrder, getOrdersByUserId } = require('../controllers/orders.controller');
 const router = Router();
 
 router.route('/')
 .get(getOrders)
-.post(createOrder)
+// .post(createOrder)
 router.route('/:id')
 .get(getOrder)
 .put(updateOrder)

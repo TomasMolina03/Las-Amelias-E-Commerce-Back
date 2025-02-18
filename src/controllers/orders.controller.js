@@ -43,29 +43,29 @@ ordersController.getOrdersByUserId = async (req, res) => {
     }
 };
 
-ordersController.createOrder = async (req, res) => {
-    const { user: userId, products, totalAmount } = req.body;
+// ordersController.createOrder = async (req, res) => {
+//     const { user: userId, products, totalAmount } = req.body;
     
-    const newOrder = new Order({
-        user: userId,
-        products,
-        totalAmount
-    });
+//     const newOrder = new Order({
+//         user: userId,
+//         products,
+//         totalAmount
+//     });
 
-    try {
-        await newOrder.save();
-        const user = await User.findById(userId);
+//     try {
+//         await newOrder.save();
+//         const user = await User.findById(userId);
 
-        if (user) {
-            user.orders.push(newOrder._id);
-            await user.save();
-        }
+//         if (user) {
+//             user.orders.push(newOrder._id);
+//             await user.save();
+//         }
 
-        res.status(201).json({ message: 'Order created', order: newOrder });
-    } catch (error) {
-        res.status(400).json({ message: 'Error creating order', error: error.message });
-    }
-};
+//         res.status(201).json({ message: 'Order created', order: newOrder });
+//     } catch (error) {
+//         res.status(400).json({ message: 'Error creating order', error: error.message });
+//     }
+// };
 
 ordersController.updateOrder = async (req, res) => {
     const { status } = req.body;
