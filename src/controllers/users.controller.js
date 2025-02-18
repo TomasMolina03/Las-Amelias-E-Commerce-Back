@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const jwtSecret = process.env.JWT_SECRET;
 const usersController = {};
@@ -30,10 +30,9 @@ usersController.createUsers = async (req, res) => {
         const existingUser = await User.findOne({ email });
         if (existingUser) return res.json({message: 'Email already exists.'});
 
-        const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({
         email,
-        password: hashedPassword,
+        password,
         name,
         surname,
         mobileNumber,
@@ -77,13 +76,23 @@ usersController.deleteUsers = async (req, res) => {
 usersController.loginUser = async (req, res) => {
     try {
         const {email, password} = req.body;
-        const user = await User.findOne({email});
+        
+        if(!email || !password) {
+            return res.status(400).json({message: 'Email and password are required.'});
+        }
+
+        const user = await User.findOne({ email });
         if(!user) {
             return res.status(404).json({message: 'User not found.'});
         }
-        const isMatch = await bcrypt.compare(password, user.password);
+
+        const isMatch = await bcrypt.compare(password, user.password || '');
         if(!isMatch) {
             return res.status(401).json({message: 'Invalid credentials.'});
+        }
+
+        if(!jwtSecret) {
+            return res.status(500).json({message: 'JWT secret is missing in environment variables.'})
         }
 
         const token = jwt.sign(
@@ -91,12 +100,11 @@ usersController.loginUser = async (req, res) => {
             jwtSecret,
             {expiresIn: '1h'}
         );
-
-        res.status(200).json({
+        return res.status(200).json({
             message: 'Login successful',
             token,
             user: { id: user._id, email: user.email, role: user.role }
-        })
+        });
     } catch (error) {
         res.status(500).json({message: 'Error logging in', error: error.message});
     }
