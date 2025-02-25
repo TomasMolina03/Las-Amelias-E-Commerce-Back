@@ -57,7 +57,26 @@ usersController.updateUsers = async (req, res) => {
             req.params.id, updatedFields, {new: true}
         );
         if(!updatedUser) return res.status(404).json({message: 'User not found.'});
-        res.status(200).json({message: 'User updated ', user: updatedUser});
+
+        const newToken = jwt.sign(
+            {   
+                id: updatedFields._id,
+                email: updatedFields.email, 
+                role: updatedFields.role,
+                name: updatedFields.name,
+                surname: updatedFields.surname,
+                address: updatedFields.address,
+                mobileNumber: updatedFields.mobileNumber
+            },
+            process.env.JWT_SECRET,
+            {expiresIn: '1h'}
+        )
+
+        res.status(200).json({
+            message: 'User updated ', 
+            user: updatedUser,
+            newToken: newToken
+        });
     } catch (error) {
         res.status(500).json({message: 'Error updating user', error: error.message});
     }
@@ -96,7 +115,15 @@ usersController.loginUser = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { id: user._id, email: user.email, role: user.role },
+            { 
+                id: user._id,
+                email: user.email, 
+                role: user.role,
+                name: user.name,
+                surname: user.surname,
+                address: user.address,
+                mobileNumber: user.mobileNumber
+            },
             jwtSecret,
             {expiresIn: '1h'}
         );
